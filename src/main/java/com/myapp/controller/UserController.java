@@ -23,10 +23,12 @@ public class UserController {
 
     // GET all users
     @GetMapping
-    public BaseResponse<List<User>> getUsers() {
+    public BaseResponse<List<User>> getUsers(
+            @RequestParam(defaultValue = "1") int page, 
+            @RequestParam(defaultValue = "5") int size) {
         try {
-            logger.info("Fetching all users");
-            List<User> users = userService.getUsers(1,5);
+            logger.info("Fetching users from page {} with size {}", page, size);
+            List<User> users = userService.getUsers(page, size);
             return new BaseResponse<>("success", "Users fetched successfully", users);
         } catch (Exception e) {
             logger.error("Error fetching users", e);
