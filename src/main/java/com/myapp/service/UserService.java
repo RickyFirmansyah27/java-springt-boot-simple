@@ -1,6 +1,10 @@
 package com.myapp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Service;
 import com.myapp.model.Entity.User;
 import com.myapp.model.Repository.UserRepository;
@@ -62,5 +66,12 @@ public class UserService {
             return true;
         }
         return false;
+    }
+
+    //new
+    public List<User> getUsers(int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size); 
+        Page<User> userPage = userRepository.findAll(pageable);
+        return userPage.getContent();
     }
 }

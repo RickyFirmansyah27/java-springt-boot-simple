@@ -26,7 +26,7 @@ public class UserController {
     public BaseResponse<List<User>> getUsers() {
         try {
             logger.info("Fetching all users");
-            List<User> users = userService.getAllUsers();
+            List<User> users = userService.getUsers(1,5);
             return new BaseResponse<>("success", "Users fetched successfully", users);
         } catch (Exception e) {
             logger.error("Error fetching users", e);
