@@ -1,6 +1,9 @@
 package com.myapp.model.Entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
 public class User {
@@ -13,7 +16,10 @@ public class User {
 
     private String email;
 
-    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
@@ -22,7 +28,6 @@ public class User {
         return email;
     }
 
-    // Setters
     public void setId(Long id) {
         this.id = id;
     }
