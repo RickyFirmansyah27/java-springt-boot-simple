@@ -25,10 +25,14 @@ public class UserController {
     @GetMapping
     public BaseResponse<List<User>> getUsers(
             @RequestParam(defaultValue = "1") int page, 
-            @RequestParam(defaultValue = "5") int size) {
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) Integer id) {
         try {
-            logger.info("Fetching users from page {} with size {}", page, size);
-            List<User> users = userService.getUsers(page, size);
+            logger.info("Endpoint '/users' hit: page={}, size={}, name={}, email={}, id={}", 
+            page, size, name, email, id);
+            List<User> users = userService.getUsers(page, size, name, email, id);
             return new BaseResponse<>("success", "Users fetched successfully", users);
         } catch (Exception e) {
             logger.error("Error fetching users", e);
