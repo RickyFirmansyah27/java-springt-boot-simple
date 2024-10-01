@@ -20,7 +20,7 @@ public class UserRepositoryImpl implements UserFilter {
     private EntityManager entityManager;
 
     @Override
-    public List<User> findUserByCriteria(String name, String email, Integer id) {
+    public List<User> findUserByCriteria(String name, String email, Integer id, int page, int size) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> query = cb.createQuery(User.class);
         Root<User> userRoot = query.from(User.class);
@@ -38,6 +38,12 @@ public class UserRepositoryImpl implements UserFilter {
         }
 
         query.select(userRoot).where(predicates.toArray(new Predicate[0]));
-        return entityManager.createQuery(query).getResultList();
+        
+        // Create TypedQuery and set pagination
+        var typedQuery = entityManager.createQuery(query);
+        typedQuery.setFirstResult((page - 1) * size); // Offset
+        typedQuery.setMaxResults(size); // Limit
+
+        return typedQuery.getResultList();
     }
 }

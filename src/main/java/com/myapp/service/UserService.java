@@ -75,6 +75,6 @@ public class UserService {
         return userPage.getContent();
     }
     public List<User> getUsers(int page, int size, String name, String email, Integer id) {
-        return userRepository.findUserByCriteria(name, email, id);
+        return userRepository.findUserByCriteria(name, email, id, page, size);
     }
 }
