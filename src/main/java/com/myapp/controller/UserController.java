@@ -4,6 +4,8 @@ import com.myapp.model.Entity.User;
 import com.myapp.response.BaseResponse;
 import com.myapp.service.UserService;
 
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
@@ -33,6 +35,10 @@ public class UserController {
             logger.info("Endpoint '/users' hit: page={}, size={}, name={}, email={}, id={}", 
             page, size, name, email, id);
             List<User> users = userService.getUsers(page, size, name, email, id);
+            if (users.isEmpty()) {
+                return new BaseResponse<>("success", "No users found", users);
+            }
+            
             return new BaseResponse<>("success", "Users fetched successfully", users);
         } catch (Exception e) {
             logger.error("Error fetching users", e);
@@ -59,7 +65,7 @@ public class UserController {
 
     // POST - Create a new user
     @PostMapping
-    public BaseResponse<User> createUser(@RequestBody User user) {
+      public BaseResponse<User> createUser(@Valid @RequestBody User user) {
         try {
             logger.info("Creating a new user with name: {}", user.getName());
             User createdUser = userService.createUser(user);
@@ -89,7 +95,7 @@ public class UserController {
 
     // PATCH - Partially update a user by ID
     @PatchMapping("/{id}")
-    public BaseResponse<User> patchUser(@PathVariable Long id, @RequestBody User userDetails) {
+    public BaseResponse<User> patchUser(@Valid @PathVariable Long id, @RequestBody User userDetails) {
         try {
             logger.info("Partially updating user with ID: {}", id);
             User updatedUser = userService.patchUser(id, userDetails);
