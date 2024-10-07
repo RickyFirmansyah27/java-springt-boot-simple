@@ -1,9 +1,10 @@
 package com.myapp.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,23 +35,32 @@ public class ProductController {
     }
 
     @GetMapping()
-    public ResponseEntity<?> getListProduct() {
-        logger.info("Endpoint '/api/products' accessed");
+    public BaseResponse<Iterable<Product>> getListProduct() {
+        logger.info("ProductController.getListProduct");
         var products = productService.findAll();
 
         if (!products.iterator().hasNext()) {
-            return ResponseEntity.ok(new BaseResponse<>("success", "No products found", products));
+            logger.info("[ProductController.getProductById - error]");
+            return new BaseResponse<>("true", "Product not found", products);
         }
 
-        return ResponseEntity.ok(products);
+        return new BaseResponse<>("success", "Product fetched successfully", products);
     }
 
     @GetMapping("/{id}")
-    public BaseResponse<Product> getProductById(@PathVariable ("id") Long id) {
-        logger.info("Fetching product with ID: {}", id);
-        var product = productService.findProductById(id);            
-        return new BaseResponse<>("success", "Users fetched successfully", product);
+    public BaseResponse<List<Product>> getProductById(@PathVariable("id") Long id) {
+        logger.info("ProductController.getProductById");
+        
+        List<Product> products = productService.findProductById(id);
+        
+        if (products.isEmpty()) {
+            logger.info("[ProductController.getProductById - error]");
+            return new BaseResponse<>("error", "Product not found", products);
+        }
+        
+        return new BaseResponse<>("success", "Product fetched successfully", products);
     }
+    
 
     @PutMapping()
     public Product updateProduct(@RequestBody Product product) {

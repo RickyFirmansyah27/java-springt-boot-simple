@@ -9,6 +9,7 @@ import com.myapp.model.Repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Collections;
 
 @Service
 public class UserService {
@@ -22,13 +23,11 @@ public class UserService {
     }
 
     // Fetch a single user by ID
-    public Optional<User> getUserById(Long id) {
-        var user = userRepository.findById(id);
-        if(user.isEmpty()) {
-            return Optional.empty();
-        }
-        return user;
+    public List<User> getUserById(Long id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        return userOptional.map(Collections::singletonList).orElseGet(Collections::emptyList);
     }
+    
 
     // Create a new user
     public User createUser(User user) {

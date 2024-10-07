@@ -1,9 +1,9 @@
 package com.myapp.service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Collections;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +16,6 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class ProductService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
-
     @Autowired
     private ProductRepo productRepository;
 
@@ -25,10 +23,9 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public Product findProductById(Long id) {
-        var product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
-        logger.info("INI PRODUCTNYA: {}", product);
-        return product;
+    public List<Product> findProductById(Long id) {
+        Optional<Product> productOptional = productRepository.findById(id);
+        return productOptional.map(Collections::singletonList).orElseGet(Collections::emptyList);
     }
 
     public void deleteProduct(Product product, Long id) {

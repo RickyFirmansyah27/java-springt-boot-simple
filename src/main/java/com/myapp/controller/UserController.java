@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -31,6 +30,7 @@ public class UserController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) Integer id) {
+        logger.info("ProductController.getUsers");
         try {
             logger.info("Endpoint '/users' hit: page={}, size={}, name={}, email={}, id={}", 
             page, size, name, email, id);
@@ -38,6 +38,8 @@ public class UserController {
             if (users.isEmpty()) {
                 return new BaseResponse<>("success", "No users found", users);
             }
+
+            logger.info("ProductController.getUsers", users);
             
             return new BaseResponse<>("success", "Users fetched successfully", users);
         } catch (Exception e) {
@@ -47,20 +49,19 @@ public class UserController {
     }
 
     // GET a user by ID
-    @GetMapping("/{id}")
-    public BaseResponse<User> getUserById(@PathVariable Long id) {
-        try {
-            logger.info("Fetching user with ID: {}", id);
-            Optional<User> user = userService.getUserById(id);
-            if (user.isPresent()) {
-                return new BaseResponse<>("success", "User fetched successfully", user.get());
-            } else {
-                return new BaseResponse<>("error", "User not found", null);
-            }
-        } catch (Exception e) {
-            logger.error("Error fetching user", e);
-            return new BaseResponse<>("error", "Failed to fetch user", null);
+    @GetMapping("/{id}")    
+    public BaseResponse<List<User>> getUserById(@PathVariable("id") Long id) {
+        logger.info("ProductController.getUserById");
+        
+        List<User> users = userService.getUserById(id);
+        
+        if (users.isEmpty()) {
+            logger.info("[ProductController.getUserById - error]");
+            return new BaseResponse<>("error", "User not found", users);
         }
+        
+        logger.info("ProductController.getUserById", users);
+        return new BaseResponse<>("success", "User fetched successfully", users);
     }
 
     // POST - Create a new user
