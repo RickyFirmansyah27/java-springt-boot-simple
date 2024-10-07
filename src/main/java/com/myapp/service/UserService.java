@@ -1,11 +1,9 @@
 package com.myapp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import org.springframework.stereotype.Service;
+
 import com.myapp.model.Entity.User;
 import com.myapp.model.Repository.UserRepository;
 
@@ -25,7 +23,11 @@ public class UserService {
 
     // Fetch a single user by ID
     public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
+        var user = userRepository.findById(id);
+        if(user.isEmpty()) {
+            return Optional.empty();
+        }
+        return user;
     }
 
     // Create a new user
@@ -68,13 +70,8 @@ public class UserService {
         return false;
     }
 
-    //new
-    public List<User> getUsers(int page, int size) {
-        Pageable pageable = PageRequest.of(page - 1, size); 
-        Page<User> userPage = userRepository.findAll(pageable);
-        return userPage.getContent();
-    }
     public List<User> getUsers(int page, int size, String name, String email, Integer id) {
-        return userRepository.findUserByCriteria(name, email, id, page, size);
+        var user = userRepository.findUserByCriteria(name, email, id, page, size);
+        return user;
     }
 }
