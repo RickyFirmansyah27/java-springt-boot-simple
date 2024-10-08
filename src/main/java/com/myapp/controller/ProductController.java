@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myapp.model.Entity.Product;
@@ -30,11 +31,11 @@ public class ProductController {
 
     @PostMapping
     public BaseResponse<Product> createProduct(@Valid @RequestBody Product product) {
-        logger.info("ProductController.createProduct");
+        logger.info("[ProductController.createProduct]");
         try {
             product = productService.createOrUpdate(product);
 
-            logger.info("ProductController.createProduct {}", product);
+            logger.info("[ProductController.createProduct - success {}]", product);
             return new BaseResponse<>("success", "Product created successfully", product);
         } catch (Exception e) {
             logger.error("Error creating product", e);
@@ -44,13 +45,14 @@ public class ProductController {
     
 
     @GetMapping()
-    public BaseResponse<Iterable<Product>> getListProduct() {
-        logger.info("ProductController.getListProduct");
-        var products = productService.findAll();
+    public BaseResponse<List<Product>> getListProduct(@RequestParam(required = false) Long id, @RequestParam(required = false) String name, @RequestParam(required = false) String description, @RequestParam(required = false) Integer price) {
+        logger.info("[ProductController.getListProduct]");
 
-        if (!products.iterator().hasNext()) {
+        List<Product> products = productService.filteredProduct(id, name, description, price);
+
+        if (products.isEmpty()) {
             logger.info("[ProductController.getListProduct - error]");
-            return new BaseResponse<>("true", "Product not found", products);
+            return new BaseResponse<>("error", "Product not found", products);
         }
 
         logger.info("[ProductController.getListProduct - {}]", products);
@@ -59,7 +61,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public BaseResponse<List<Product>> getProductById(@PathVariable("id") Long id) {
-        logger.info("ProductController.getProductById");
+        logger.info("[ProductController.getProductById]");
 
         List<Product> products = productService.findProductById(id);
 
@@ -74,11 +76,11 @@ public class ProductController {
 
     @PutMapping()
     public BaseResponse<Product> updateProduct(@RequestBody Product product) {
-        logger.info("ProductController.updateProduct");
+        logger.info("[ProductController.updateProduct]");
         try {
             product = productService.createOrUpdate(product);
 
-            logger.info("ProductController.updateProduct {}", product);
+            logger.info("[ProductController.getListProduct - success {}]", product);
             return new BaseResponse<>("success", "Product updated successfully", product);
         } catch (Exception e) {
             logger.error("Error creating product", e);

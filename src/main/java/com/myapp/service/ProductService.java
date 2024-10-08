@@ -36,11 +36,11 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public List<Product> findByName(Product product, String name) {
-        return productRepository.findByNameContains(name);
-    }
-
     public void deleteProductById(Product product, Long id) {
         productRepository.deleteById(id);
+    }
+
+    public List<Product> filteredProduct(Long id, String name, String description, Integer price) {
+        return productRepository.filteredProduct(id, name, description, price);
     }
 }
