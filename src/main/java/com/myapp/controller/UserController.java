@@ -30,7 +30,7 @@ public class UserController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) Integer id) {
-        logger.info("ProductController.getUsers");
+                logger.info("[UserController.getUsers]");
         try {
             logger.info("Endpoint '/users' hit: page={}, size={}, name={}, email={}, id={}", 
             page, size, name, email, id);
@@ -39,7 +39,7 @@ public class UserController {
                 return new BaseResponse<>("success", "No users found", users);
             }
 
-            logger.info("ProductController.getUsers", users);
+            logger.info("UserController.getUsers", users);
             
             return new BaseResponse<>("success", "Users fetched successfully", users);
         } catch (Exception e) {
@@ -51,22 +51,23 @@ public class UserController {
     // GET a user by ID
     @GetMapping("/{id}")    
     public BaseResponse<List<User>> getUserById(@PathVariable("id") Long id) {
-        logger.info("ProductController.getUserById");
+        logger.info("[UserController.getUserById]");
         
         List<User> users = userService.getUserById(id);
         
         if (users.isEmpty()) {
-            logger.info("[ProductController.getUserById - error]");
+            logger.info("[UserController.getUserById - error]");
             return new BaseResponse<>("error", "User not found", users);
         }
         
-        logger.info("ProductController.getUserById", users);
+        logger.info("[UserController.getUserById - susccess {}]", users);
         return new BaseResponse<>("success", "User fetched successfully", users);
     }
 
     // POST - Create a new user
     @PostMapping
       public BaseResponse<User> createUser(@Valid @RequestBody User user) {
+        logger.info("[UserController.createUser]");
         try {
             logger.info("Creating a new user with name: {}", user.getName());
             User createdUser = userService.createUser(user);
@@ -80,6 +81,7 @@ public class UserController {
     // PUT - Update a user by ID
     @PutMapping("/{id}")
     public BaseResponse<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
+        logger.info("[UserController.updateUser]");
         try {
             logger.info("Updating user with ID: {}", id);
             User updatedUser = userService.updateUser(id, userDetails);
@@ -97,6 +99,7 @@ public class UserController {
     // PATCH - Partially update a user by ID
     @PatchMapping("/{id}")
     public BaseResponse<User> patchUser(@Valid @PathVariable Long id, @RequestBody User userDetails) {
+        logger.info("[UserController.patchUser]");
         try {
             logger.info("Partially updating user with ID: {}", id);
             User updatedUser = userService.patchUser(id, userDetails);
@@ -114,6 +117,7 @@ public class UserController {
     // DELETE - Delete a user by ID
     @DeleteMapping("/{id}")
     public BaseResponse<String> deleteUser(@PathVariable Long id) {
+        logger.info("[UserController.deleteUser]");
         try {
             logger.info("Deleting user with ID: {}", id);
             boolean deleted = userService.deleteUser(id);
