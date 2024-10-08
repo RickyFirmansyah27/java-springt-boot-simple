@@ -2,6 +2,7 @@ package com.myapp.model.Repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -17,7 +18,8 @@ public interface ProductRepo extends CrudRepository<Product, Long> {
     public List<Product> filteredProduct(@Param("id") Long id,
             @Param("name") String name,
             @Param("description") String description,
-            @Param("price") Integer price);
+            @Param("price") Integer price,
+            Pageable pageable);
 
     // ADD MORE QUERIES HERE
 }

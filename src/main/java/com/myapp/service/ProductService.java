@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Collections;
 
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +42,7 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public List<Product> filteredProduct(Long id, String name, String description, Integer price) {
-        return productRepository.filteredProduct(id, name, description, price);
+    public List<Product> filteredProduct(Long id, String name, String description, Integer price, Pageable pageable) {
+        return productRepository.filteredProduct(id, name, description, price, pageable);
     }
 }

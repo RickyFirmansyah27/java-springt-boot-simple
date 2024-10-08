@@ -5,6 +5,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,10 +47,17 @@ public class ProductController {
     
 
     @GetMapping()
-    public BaseResponse<List<Product>> getListProduct(@RequestParam(required = false) Long id, @RequestParam(required = false) String name, @RequestParam(required = false) String description, @RequestParam(required = false) Integer price) {
+    public BaseResponse<List<Product>> getListProduct(
+        @RequestParam(required = false) Long id, 
+        @RequestParam(required = false) String name, 
+        @RequestParam(required = false) String description, 
+        @RequestParam(required = false) Integer price,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size) {
         logger.info("[ProductController.getListProduct]");
 
-        List<Product> products = productService.filteredProduct(id, name, description, price);
+        Pageable pageable = PageRequest.of(page - 1, size);
+        List<Product> products = productService.filteredProduct(id, name, description, price, pageable);
 
         if (products.isEmpty()) {
             logger.info("[ProductController.getListProduct - error]");
