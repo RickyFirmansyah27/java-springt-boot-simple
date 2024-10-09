@@ -56,7 +56,7 @@ public class ProductController {
         @RequestParam(defaultValue = "10") int size) {
         logger.info("[ProductController.getListProduct]");
 
-        Pageable pageable = PageRequest.of(page - 1, size);
+        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, size);
         List<Product> products = productService.filteredProduct(id, name, description, price, pageable);
 
         if (products.isEmpty()) {
