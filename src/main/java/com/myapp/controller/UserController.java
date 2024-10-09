@@ -30,16 +30,14 @@ public class UserController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) Integer id) {
-                logger.info("[UserController.getUsers]");
+            logger.info("[UserController.getUsers]");
         try {
-            logger.info("Endpoint '/users' hit: page={}, size={}, name={}, email={}, id={}", 
-            page, size, name, email, id);
             List<User> users = userService.getUsers(page, size, name, email, id);
             if (users.isEmpty()) {
                 return new BaseResponse<>("success", "No users found", users);
             }
 
-            logger.info("UserController.getUsers", users);
+            logger.info("UserController.getUsers {}", users);
             
             return new BaseResponse<>("success", "Users fetched successfully", users);
         } catch (Exception e) {
@@ -80,11 +78,11 @@ public class UserController {
 
     @PutMapping()
     public BaseResponse<User> updateUser(@RequestBody User user) {
-        logger.info("[ProductController.updateUser]");
+        logger.info("[UserController.updateUser]");
         try {
             user = userService.createOrUpdate(user);
 
-            logger.info("[ProductController.updateUser - success {}]", user);
+            logger.info("[UserController.updateUser - success {}]", user);
             return new BaseResponse<>("success", "User updated successfully", user);
         } catch (Exception e) {
             logger.error("Error creating user", e);
