@@ -69,8 +69,8 @@ public class UserController {
       public BaseResponse<User> createUser(@Valid @RequestBody User user) {
         logger.info("[UserController.createUser]");
         try {
-            logger.info("Creating a new user with name: {}", user.getName());
-            User createdUser = userService.createUser(user);
+            var createdUser = userService.createOrUpdate(user);
+            logger.info("[UserController.createUser - success {}]", createdUser);
             return new BaseResponse<>("success", "User created successfully", createdUser);
         } catch (Exception e) {
             logger.error("Error creating user", e);
@@ -78,41 +78,20 @@ public class UserController {
         }
     }
 
-    // PUT - Update a user by ID
-    @PutMapping("/{id}")
-    public BaseResponse<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
-        logger.info("[UserController.updateUser]");
+    @PutMapping()
+    public BaseResponse<User> updateUser(@RequestBody User user) {
+        logger.info("[ProductController.updateUser]");
         try {
-            logger.info("Updating user with ID: {}", id);
-            User updatedUser = userService.updateUser(id, userDetails);
-            if (updatedUser != null) {
-                return new BaseResponse<>("success", "User updated successfully", updatedUser);
-            } else {
-                return new BaseResponse<>("error", "User not found", null);
-            }
+            user = userService.createOrUpdate(user);
+
+            logger.info("[ProductController.updateUser - success {}]", user);
+            return new BaseResponse<>("success", "User updated successfully", user);
         } catch (Exception e) {
-            logger.error("Error updating user", e);
-            return new BaseResponse<>("error", "Failed to update user", null);
+            logger.error("Error creating user", e);
+            return new BaseResponse<>("error", "Failed to updating user", null);
         }
     }
 
-    // PATCH - Partially update a user by ID
-    @PatchMapping("/{id}")
-    public BaseResponse<User> patchUser(@Valid @PathVariable Long id, @RequestBody User userDetails) {
-        logger.info("[UserController.patchUser]");
-        try {
-            logger.info("Partially updating user with ID: {}", id);
-            User updatedUser = userService.patchUser(id, userDetails);
-            if (updatedUser != null) {
-                return new BaseResponse<>("success", "User updated successfully", updatedUser);
-            } else {
-                return new BaseResponse<>("error", "User not found", null);
-            }
-        } catch (Exception e) {
-            logger.error("Error patching user", e);
-            return new BaseResponse<>("error", "Failed to update user", null);
-        }
-    }
 
     // DELETE - Delete a user by ID
     @DeleteMapping("/{id}")
